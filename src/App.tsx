@@ -6,6 +6,7 @@ import Profile from "./pages/Profile";
 import RegisterPage from "./pages/RegisterPage";
 import StartPage from "./pages/StratPage";
 import Navbar from "./components/navbar/Navbar";
+import PrivateRoute from "./privateRoute/privateroute";
 import "./App.css";
 
 function App() {
@@ -18,10 +19,10 @@ function App() {
       {shouldShowNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<StartPage />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/explore" element={<PrivateRoute><Explore /></PrivateRoute>} />
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/loginpage" element={<LoginPage />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
         <Route path="/registerpage" element={<RegisterPage />} />
       </Routes>
     </div>

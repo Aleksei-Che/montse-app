@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchSignInMethodsForEmail } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { db } from "../firebaseConfig";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import Logo from "./Logo";
 
 const StartPage: React.FC = () => {
@@ -12,8 +12,8 @@ const StartPage: React.FC = () => {
   const [animationStage, setAnimationStage] = useState<"intro" | "fade-out" | "welcome">("intro");
   const [showLogo, setShowLogo] = useState(false);
 
+  // Таймеры для управления анимациями
   useEffect(() => {
-    // Таймеры для управления анимациями
     const introTimer = setTimeout(() => setAnimationStage("fade-out"), 3000);
     const welcomeTimer = setTimeout(() => setAnimationStage("welcome"), 4000);
     const logoTimer = setTimeout(() => setShowLogo(true), 4000);
@@ -25,6 +25,14 @@ const StartPage: React.FC = () => {
     };
   }, []);
 
+  // Проверка email в Firestore
+  const getUserData = async (email: string) => {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  };
+
   const handleCheckEmail = async () => {
     if (!email.trim()) {
       setError("Email cannot be empty.");
@@ -34,18 +42,17 @@ const StartPage: React.FC = () => {
     setIsLoading(true);
     try {
       setError("");
-      const trimmedEmail = email.trim();
-      const methods = await fetchSignInMethodsForEmail(auth, trimmedEmail);
+      const trimmedEmail = email.trim().toLowerCase();
 
-      if (methods.length > 0) {
-        // Если email зарегистрирован, перенаправляем на LoginPage
+      const userExists = await getUserData(trimmedEmail);
+
+      if (userExists) {
         navigate("/loginpage", { state: { email: trimmedEmail } });
       } else {
-        // Если email не зарегистрирован, перенаправляем на RegisterPage
         navigate("/registerpage", { state: { email: trimmedEmail } });
       }
     } catch (error) {
-      console.error("Unexpected error during email check:", error);
+      console.error("Error during Firestore check:", error);
       setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -84,7 +91,7 @@ const StartPage: React.FC = () => {
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border border-gray-300 focus:ring-2 focus:ring-blue-400 p-3 mb-4 w-full rounded-lg"
+          className="border p-2 mb-4 w-full rounded"
           required
         />
         <button
@@ -95,7 +102,7 @@ const StartPage: React.FC = () => {
           }`}
           disabled={isLoading}
         >
-          {isLoading ? "Checking..." : "Get Started"}
+          {isLoading ? "Checking..." : "Next"}
         </button>
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>

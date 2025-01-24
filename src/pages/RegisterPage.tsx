@@ -1,109 +1,94 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { useNavigate, useLocation } from "react-router-dom";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, updateProfile } from "firebase/auth";
+import { auth, db } from "../firebaseConfig";
+import { setDoc, doc } from "firebase/firestore";
 
 const RegisterPage: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState(location.state?.email || "");
+  const location = useLocation();
+  const initialEmail = location.state?.email || ""; // Email, переданный со StartPage
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState(""); // Поле для имени пользователя
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = async () => {
-    if (!name.trim()) {
-      setError("Name cannot be empty.");
-      return;
-    }
-    if (!email.trim()) {
-      setError("Email cannot be empty.");
-      return;
-    }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
-      return;
-    }
-
-    setIsLoading(true);
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-      // Обновляем профиль, добавляем имя
-      if (auth.currentUser) {
-        await updateProfile(auth.currentUser, { displayName: name });
+      // Проверка: существует ли пользователь с таким email
+      const methods = await fetchSignInMethodsForEmail(auth, email.trim().toLowerCase());
+      if (methods.length > 0) {
+        setError("Email already in use. Redirecting to LoginPage...");
+        navigate("/loginpage", { state: { email } });
+        return;
       }
-      await setDoc(doc(db, "users", userCredential.user.uid), {
-        uid: userCredential.user.uid, // Уникальный идентификатор
-        name,
-        email,
+
+      // Создаём пользователя в Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
+      const user = userCredential.user;
+
+      // Обновляем имя пользователя
+      if (name.trim()) {
+        await updateProfile(user, { displayName: name });
+      }
+
+      // Сохраняем данные пользователя в Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        name: name.trim() || "Anonymous",
         createdAt: new Date().toISOString(),
       });
 
-      console.log("User registered:", userCredential.user);
-      alert("Registration successful!");
-
-      // Переход на Home с передачей имени пользователя
-      navigate("/home", { state: { name } });
-    } catch (error) {
-      console.error("Error during registration:", error);
-      setError("Registration failed. Please try again.");
+      console.log("User successfully registered and added to Firestore!");
+      navigate("/home"); // Перенаправляем на главную страницу
+    } catch (error: any) {
+      console.error("Registration failed:", error);
+      setError(error.message || "Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Универсальная функция для обработки ввода
-  const handleInputChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setError(""); // Сбрасываем ошибку при вводе
-      setter(e.target.value);
-    };
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-500 to-indigo-700 text-white">
-      <h1 className="text-3xl font-bold mb-6">Register</h1>
-      <form
-        onSubmit={(e) => e.preventDefault()}
-        className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm text-black"
-      >
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <form onSubmit={handleRegister} className="bg-white p-6 rounded shadow-md w-full max-w-sm">
+        <h1 className="text-2xl font-bold mb-4">Register</h1>
         <input
           type="text"
-          placeholder="Your name"
+          placeholder="Enter your name"
           value={name}
-          onChange={handleInputChange(setName)}
-          className="border border-gray-300 focus:ring-2 focus:ring-blue-400 p-3 mb-4 w-full rounded-lg"
+          onChange={(e) => setName(e.target.value)}
+          className="border p-2 mb-4 w-full rounded"
           required
         />
         <input
           type="email"
-          placeholder="Email"
+          placeholder="Enter your email"
           value={email}
-          onChange={handleInputChange(setEmail)}
-          className="border border-gray-300 focus:ring-2 focus:ring-blue-400 p-3 mb-4 w-full rounded-lg"
+          onChange={(e) => setEmail(e.target.value)}
+          className="border p-2 mb-4 w-full rounded"
           required
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Enter your password"
           value={password}
-          onChange={handleInputChange(setPassword)}
-          className="border border-gray-300 focus:ring-2 focus:ring-blue-400 p-3 mb-4 w-full rounded-lg"
+          onChange={(e) => setPassword(e.target.value)}
+          className="border p-2 mb-4 w-full rounded"
           required
         />
         <button
-          type="button"
-          onClick={handleRegister}
-          className={`bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 w-full mt-2 transition-all duration-300 ${
-            isLoading ? "cursor-wait opacity-70" : ""
-          }`}
+          type="submit"
           disabled={isLoading}
+          className={`${
+            isLoading ? "bg-gray-300" : "bg-blue-500"
+          } text-white p-2 rounded hover:bg-blue-600 w-full`}
         >
           {isLoading ? "Registering..." : "Register"}
         </button>
