@@ -2,7 +2,11 @@ import React from "react";
 
 const Profile: React.FC = () => {
     return (
-        <h1>Perfil</h1>
+     <div>
+        <h1>Profile</h1>
+     </div>
     )
 
 }
+
+export default Profile
