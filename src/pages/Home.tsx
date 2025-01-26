@@ -37,7 +37,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="relative p-4 sm:p-6 lg:p-8 max-w-screen-lg mx-auto">
+    <div className="relative p-4 sm:p-6 lg:p-8 max-w-screen-lg mx-auto pb-20">
       <h1 className="text-2xl font-bold mb-6 text-center">Welcome to Your Library!</h1>
 
       <div className="space-y-8">
@@ -47,7 +47,7 @@ const Home: React.FC = () => {
       </div>
 
       <button
-        className="fixed bottom-6 right-6 bg-blue-500 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600"
+        className="fixed bottom-6 right-2 bg-blue-500 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 z-50"
         onClick={handleOpenSearchModal}
       >
         +

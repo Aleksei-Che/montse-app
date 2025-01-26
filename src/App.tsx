@@ -1,4 +1,8 @@
 import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useAppDispatch } from "./hooks/useAppDispatch";
+import { fetchBooksFromFirestore } from "./bookUtils/booksSlice";
+import { useAuth } from "./hooks/useAuth";
 import Explore from "./pages/Explore";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
@@ -10,10 +14,17 @@ import PrivateRoute from "./privateRoute/Privateroute";
 import "./App.css";
 
 function App() {
+  const dispatch = useAppDispatch();
+  const { user } = useAuth(); // Получаем текущего пользователя
   const location = useLocation();
   const hideNavbarPath = ["/", "/loginpage", "/registerpage"];
   const shouldShowNavbar = !hideNavbarPath.includes(location.pathname);
-
+  
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchBooksFromFirestore(user.uid)); // Загружаем книги пользователя
+    }
+  }, [dispatch, user]);
   return (
     <div>
       {shouldShowNavbar && <Navbar />}

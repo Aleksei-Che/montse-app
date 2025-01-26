@@ -1,6 +1,7 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { addBook } from "./BooksSlice";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { addBookToFirestore } from "./booksSlice";
+import { useAuth } from "../hooks/useAuth";
 
 interface AddBookModalProps {
   book?: {
@@ -13,17 +14,49 @@ interface AddBookModalProps {
 }
 
 const AddBookModal: React.FC<AddBookModalProps> = ({ book, onClose }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { user } = useAuth();
 
-  const handleAddBook = (status: "reading" | "later") => {
-    if (!book) return; // Проверяем, что данные книги существуют
-    dispatch(
-      addBook({
+  const handleAddBook = async (status: "reading" | "later") => {
+    if (!user) {
+      console.error("User is not logged in");
+      return;
+    }
+
+    if (!book) {
+      console.error("No book selected for adding");
+      return;
+    }
+
+    try {
+      console.log("Adding book to Firestore:", book);
+
+      // Убираем `startTime`, если статус не "reading"
+      const bookData = {
         ...book,
         status,
-      })
-    );
-    onClose();
+        ...(status === "reading" && { startTime: Date.now() }),
+      };
+
+      console.log("Dispatching addBookToFirestore with:", {
+        userId: user.uid,
+        book: bookData,
+      });
+
+      const result = await dispatch(
+        addBookToFirestore({
+          userId: user.uid,
+          book: bookData,
+        })
+      );
+
+      console.log("Result of dispatch:", result);
+
+      console.log(`Book added with status: ${status}`);
+      onClose(); // Закрываем модалку после добавления
+    } catch (error) {
+      console.error("Failed to add book to Firestore:", error);
+    }
   };
 
   return (
