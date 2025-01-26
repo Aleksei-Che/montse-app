@@ -6,7 +6,7 @@ import Profile from "./pages/Profile";
 import RegisterPage from "./pages/RegisterPage";
 import StartPage from "./pages/StratPage";
 import Navbar from "./components/navbar/Navbar";
-import PrivateRoute from "./privateRoute/privateroute";
+import PrivateRoute from "./privateRoute/Privateroute";
 import "./App.css";
 
 function App() {

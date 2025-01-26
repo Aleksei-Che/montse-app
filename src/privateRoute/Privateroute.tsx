@@ -7,9 +7,8 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const user = auth.currentUser; // Проверяем текущего пользователя
+  const user = auth.currentUser; 
 
-  // Если пользователь не авторизован, перенаправляем на страницу входа
   return user ? children : <Navigate to="/loginpage" />;
 };
 
