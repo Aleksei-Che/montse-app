@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
@@ -21,35 +21,48 @@ const ReadingNow: React.FC = () => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
+  // Обновляем таймеры чтения
   useEffect(() => {
+    console.log("Updating timers for books:", books); // Лог списка книг с таймерами
     const intervals: { [key: string]: NodeJS.Timeout } = {};
-
+  
     books.forEach((book) => {
-      if (book.startTime) {
+      if (book.startTime && !timers[book.id]) {
         const startTime = book.startTime;
         intervals[book.id] = setInterval(() => {
           const elapsedTime = Date.now() - startTime;
           const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
           const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+  
+          console.log(`Updating timer for book ${book.id}: ${hours}h ${minutes}m`); // Лог обновления таймера
           setTimers((prev) => ({
             ...prev,
             [book.id]: `${hours}h ${minutes}m`,
           }));
-        }, 1000);
+        }, 60000); // Обновляем каждую минуту
       }
     });
-
+  
     return () => {
+      console.log("Clearing timers for books:", books); // Лог очистки интервалов
       Object.values(intervals).forEach(clearInterval);
     };
-  }, [books]);
+  }, [books, timers]);
 
-  const handleStopReading = async (bookId: string, startTime: number) => {
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleStopReading = useCallback(
+  async (bookId: string, startTime: number) => {
+    if (isUpdating) return; // Блокируем повторное выполнение
+    console.log("Stopping reading for book:", bookId); // Лог начала остановки книги
+    setIsUpdating(true);
+
     const totalTime = Date.now() - startTime;
     const finishedAt = new Date().toISOString();
 
     if (user) {
       try {
+        console.log("Updating Firestore for book:", { bookId, totalTime, finishedAt }); // Лог отправляемых данных
         await dispatch(
           updateBookInFirestore({
             userId: user.uid,
@@ -70,32 +83,42 @@ const ReadingNow: React.FC = () => {
             finishedAt,
           })
         );
-
-        console.log("Book status successfully updated in Firestore.");
       } catch (error) {
-        console.error("Failed to update book status in Firestore:", error);
+        console.error("Failed to update book status:", error);
+      } finally {
+        setIsUpdating(false); // Сбрасываем блокировку
       }
     }
-  };
+  },
+  [dispatch, user, isUpdating]
+);
+
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleConfirmDelete = async () => {
+    if (isDeleting) return;
+    console.log("Deleting book:", selectedBookId); // Лог книги на удаление
+    setIsDeleting(true);
+  
     if (selectedBookId && user) {
       try {
+        console.log("Removing from Firestore bookId:", selectedBookId); // Лог перед отправкой запроса на удаление
         await dispatch(
           removeBookFromFirestore({
             userId: user.uid,
             bookId: selectedBookId,
           })
         ).unwrap();
-
+  
         console.log(`Book ${selectedBookId} successfully deleted from Firestore.`);
       } catch (error) {
         console.error("Failed to delete the book:", error);
+      } finally {
+        setIsDeleting(false);
       }
     }
     handleCloseConfirmModal();
   };
-
   const handleOpenConfirmModal = (bookId: string) => {
     setSelectedBookId(bookId);
     setIsConfirmModalOpen(true);

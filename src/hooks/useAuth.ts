@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "../firebaseConfig"; // Импортируйте вашу конфигурацию Firebase
+import { auth } from "../firebaseConfig";
 
 interface AuthState {
   user: User | null;
@@ -12,14 +12,24 @@ export const useAuth = (): AuthState => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("useAuth initialized");
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      console.log("onAuthStateChanged triggered. Current User:", currentUser);
+
+      // Условие предотвращает лишние обновления
+      setUser((prevUser) => (prevUser?.uid === currentUser?.uid ? prevUser : currentUser));
+      console.log("useAuth - Updated user state:", currentUser);
       setLoading(false);
     });
 
-    // Отписываемся от слушателя при размонтировании
-    return () => unsubscribe();
+    return () => {
+      console.log("useAuth cleanup: unsubscribing auth listener");
+      unsubscribe();
+    };
   }, []);
+
+  console.log("useAuth - user:", user, "loading:", loading);
 
   return { user, loading };
 };

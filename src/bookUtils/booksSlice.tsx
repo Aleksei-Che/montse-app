@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { doc, addDoc, deleteDoc, updateDoc, getDocs, collection } from "firebase/firestore";
+import { doc, addDoc, deleteDoc, updateDoc, getDocs, collection, collectionGroup } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
 type BookStatus = "reading" | "finished" | "later";
@@ -13,6 +13,7 @@ export interface Book {
   startTime?: number;
   totalTime?: number;
   finishedAt?: string;
+  totalReaders?: number;
 }
 
 interface BooksState {
@@ -84,6 +85,26 @@ export const removeBookFromFirestore = createAsyncThunk(
   }
 );
 
+export const fetchTotalReaders = createAsyncThunk<
+  { title: string; totalReaders: number }, 
+  string
+>("books/fetchTotalReaders", async (title, { rejectWithValue }) => {
+  try {
+    const booksRef = collectionGroup(db, "books");
+    const querySnapshot = await getDocs(booksRef);
+
+    // Считаем книги с данным названием и статусом "reading"
+    const totalReaders = querySnapshot.docs.filter(
+      (doc) => doc.data().title === title && doc.data().status === "reading"
+    ).length;
+
+    return { title, totalReaders };
+  } catch (error) {
+    if (error instanceof Error) return rejectWithValue(error.message);
+    return rejectWithValue("Failed to fetch total readers.");
+  }
+});
+
 const booksSlice = createSlice({
   name: "books",
   initialState,
@@ -113,6 +134,12 @@ const booksSlice = createSlice({
       })
       .addCase(removeBookFromFirestore.fulfilled, (state, action) => {
         state.books = state.books.filter((book) => book.id !== action.payload); // Удаляем книгу из состояния
+      })
+      .addCase(fetchTotalReaders.fulfilled, (state, action) => {
+        const book = state.books.find((b) => b.title === action.payload.title);
+        if (book) {
+          book.totalReaders = action.payload.totalReaders;
+        }
       });
   },
 });

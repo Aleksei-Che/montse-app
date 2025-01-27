@@ -13,24 +13,30 @@ interface Book {
 }
 
 const Home: React.FC = () => {
+  console.log("Rendering Home component"); // Лог рендера компонента
+
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isAddBookModalOpen, setIsAddBookModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
 
   const handleOpenSearchModal = () => {
+    console.log("Opening search modal"); // Лог открытия модалки
     setIsSearchModalOpen(true);
   };
 
   const handleCloseSearchModal = () => {
+    console.log("Closing search modal"); // Лог закрытия модалки
     setIsSearchModalOpen(false);
   };
 
   const handleCloseAddBookModal = () => {
+    console.log("Closing add book modal"); // Лог закрытия модалки добавления книги
     setIsAddBookModalOpen(false);
     setSelectedBook(null);
   };
 
   const handleBookSelect = (book: Book) => {
+    console.log("Book selected:", book); // Лог выбранной книги
     setSelectedBook(book);
     setIsSearchModalOpen(false);
     setIsAddBookModalOpen(true);

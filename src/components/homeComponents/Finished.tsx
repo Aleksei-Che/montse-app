@@ -10,46 +10,54 @@ import ScrollButtons from "./ScrollButtons";
 
 const Finished: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAuth(); // Получаем текущего пользователя
-  const finishedBooks = useSelector(selectFinishedBooks); // Используем готовый селектор
+  const { user } = useAuth();
+  const finishedBooks = useSelector(selectFinishedBooks);
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
   const handleOpenConfirmModal = (bookId: string) => {
+    console.log("Opening confirm modal for book:", bookId); // Лог открытия модалки
     setSelectedBookId(bookId);
     setIsConfirmModalOpen(true);
   };
 
   const handleCloseConfirmModal = () => {
+    console.log("Closing confirm modal"); // Лог закрытия модалки
     setSelectedBookId(null);
     setIsConfirmModalOpen(false);
   };
 
   const handleConfirmDelete = async () => {
     if (selectedBookId && user) {
+      console.log("Attempting to delete book:", selectedBookId); // Лог перед удалением
       try {
         await dispatch(
           removeBookFromFirestore({
             userId: user.uid,
-            bookId: selectedBookId, // Передаём ID книги
+            bookId: selectedBookId,
           })
         );
-        console.log(`Book ${selectedBookId} successfully deleted.`);
+        console.log(`Book ${selectedBookId} successfully deleted.`); // Лог успешного удаления
       } catch (error) {
-        console.error("Failed to delete the book:", error);
+        console.error("Failed to delete the book:", error); // Лог ошибки удаления
       }
     }
     handleCloseConfirmModal();
   };
+
+  console.log("Finished books:", finishedBooks); // Лог списка книг
 
   return (
     <section className="relative">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Finished</h2>
         <button
-          onClick={() => setIsEditMode((prev) => !prev)}
+          onClick={() => {
+            console.log("Toggling edit mode:", !isEditMode); // Лог переключения режима редактирования
+            setIsEditMode((prev) => !prev);
+          }}
           className="text-blue-500 hover:underline"
         >
           {isEditMode ? "Done" : "Edit"}

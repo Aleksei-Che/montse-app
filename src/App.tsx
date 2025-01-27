@@ -15,16 +15,27 @@ import "./App.css";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { user } = useAuth(); // Получаем текущего пользователя
+  const { user, loading } = useAuth(); // Добавляем loading из useAuth
   const location = useLocation();
+
   const hideNavbarPath = ["/", "/loginpage", "/registerpage"];
   const shouldShowNavbar = !hideNavbarPath.includes(location.pathname);
-  
+
   useEffect(() => {
     if (user) {
+      console.log("App - Fetching books for user:", user.uid);
       dispatch(fetchBooksFromFirestore(user.uid)); // Загружаем книги пользователя
+    } else {
+      console.log("App - No user logged in.");
     }
+    console.log("App - Current user:", user);
   }, [dispatch, user]);
+
+  if (loading) {
+    console.log("App - Loading...");
+    return <div>Loading...</div>; // Отображаем спиннер или текст, пока загружается авторизация
+  }
+
   return (
     <div>
       {shouldShowNavbar && <Navbar />}

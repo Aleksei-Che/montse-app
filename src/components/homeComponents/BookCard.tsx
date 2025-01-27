@@ -6,6 +6,7 @@ interface BookCardProps {
   author: string;
   coverImage: string;
   status: "reading" | "finished" | "later";
+  totalReaders?: number; // Новое поле
   children?: React.ReactNode;
   onActionClick?: () => void;
   actionLabel?: string;

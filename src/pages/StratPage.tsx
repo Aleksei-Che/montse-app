@@ -5,6 +5,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import Logo from "./Logo";
 
 const StartPage: React.FC = () => {
+  console.log("StartPage is rendered!");
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");

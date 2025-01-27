@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth"; // Импорт функции отдельно
-import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../firebaseConfig";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const LoginPage: React.FC = () => {
   const location = useLocation();
@@ -12,17 +13,31 @@ const LoginPage: React.FC = () => {
   // Получаем email из переданных данных
   const email = location.state?.email || "";
 
-  // Получение имени пользователя из Firebase
+  // Получение имени пользователя из Firestore
   useEffect(() => {
     const fetchUserName = async () => {
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        setUserName(currentUser.displayName || null);
+      if (email) {
+        try {
+          const usersRef = collection(db, "users");
+          const q = query(usersRef, where("email", "==", email));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const userData = querySnapshot.docs[0].data();
+            setUserName(userData.name || "Guest");
+          } else {
+            console.warn("User not found in Firestore.");
+            setUserName("Guest");
+          }
+        } catch (error) {
+          console.error("Error fetching user name from Firestore:", error);
+          setUserName("Guest");
+        }
       }
     };
 
     fetchUserName();
-  }, []);
+  }, [email]);
 
   const handleLogin = async () => {
     try {
@@ -31,8 +46,8 @@ const LoginPage: React.FC = () => {
 
       // Получаем имя пользователя после успешного входа
       const currentUser = auth.currentUser;
-      if (currentUser) {
-        setUserName(currentUser.displayName || "User");
+      if (currentUser?.displayName) {
+        setUserName(currentUser.displayName);
       }
 
       alert("Login successful!");

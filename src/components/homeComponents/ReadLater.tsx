@@ -20,21 +20,24 @@ const ReadLater: React.FC = () => {
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
   const handleOpenConfirmModal = (bookId: string) => {
+    console.log("Opening confirm modal for book:", bookId); // Лог открытия модалки
     setSelectedBookId(bookId);
     setIsConfirmModalOpen(true);
   };
 
   const handleCloseConfirmModal = () => {
+    console.log("Closing confirm modal"); // Лог закрытия модалки
     setSelectedBookId(null);
     setIsConfirmModalOpen(false);
   };
 
   const handleStartReading = async (bookId: string) => {
     if (!user) {
-      console.error("User not logged in.");
+      console.error("User not logged in."); // Лог отсутствия пользователя
       return;
     }
 
+    console.log("Starting reading for book:", bookId); // Лог перед началом перемещения книги
     try {
       await dispatch(
         updateBookInFirestore({
@@ -46,14 +49,15 @@ const ReadLater: React.FC = () => {
           },
         })
       );
-      console.log(`Book ${bookId} moved to "reading" in Firestore.`);
+      console.log(`Book ${bookId} moved to "reading" in Firestore.`); // Лог успешного перемещения
     } catch (error) {
-      console.error("Failed to move book to reading:", error);
+      console.error("Failed to move book to reading:", error); // Лог ошибки перемещения
     }
   };
 
   const handleConfirmDelete = async () => {
     if (selectedBookId && user) {
+      console.log("Attempting to delete book:", selectedBookId); // Лог перед удалением
       try {
         await dispatch(
           removeBookFromFirestore({
@@ -61,20 +65,25 @@ const ReadLater: React.FC = () => {
             bookId: selectedBookId,
           })
         ).unwrap();
-        console.log(`Book ${selectedBookId} successfully deleted from Firestore.`);
+        console.log(`Book ${selectedBookId} successfully deleted from Firestore.`); // Лог успешного удаления
       } catch (error) {
-        console.error("Failed to delete the book:", error);
+        console.error("Failed to delete the book:", error); // Лог ошибки удаления
       }
     }
     handleCloseConfirmModal();
   };
+
+  console.log("Read later books:", books); // Лог списка книг
 
   return (
     <section>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Read Later</h2>
         <button
-          onClick={() => setIsEditMode((prev) => !prev)}
+          onClick={() => {
+            console.log("Toggling edit mode:", !isEditMode); // Лог переключения режима редактирования
+            setIsEditMode((prev) => !prev);
+          }}
           className="text-blue-500 hover:underline"
         >
           {isEditMode ? "Done" : "Edit"}
