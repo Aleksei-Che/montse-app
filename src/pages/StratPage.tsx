@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "../firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 import Logo from "./Logo";
 
 const StartPage: React.FC = () => {
@@ -13,7 +13,7 @@ const StartPage: React.FC = () => {
   const [animationStage, setAnimationStage] = useState<"intro" | "fade-out" | "welcome">("intro");
   const [showLogo, setShowLogo] = useState(false);
 
-  // Таймеры для управления анимациями
+  // Таймеры для анимаций
   useEffect(() => {
     const introTimer = setTimeout(() => setAnimationStage("fade-out"), 3000);
     const welcomeTimer = setTimeout(() => setAnimationStage("welcome"), 4000);
@@ -34,9 +34,18 @@ const StartPage: React.FC = () => {
     return !querySnapshot.empty;
   };
 
+  // Валидация email (регулярное выражение)
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const handleCheckEmail = async () => {
     if (!email.trim()) {
       setError("Email cannot be empty.");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setError("Invalid email format. Example: email@example.com");
       return;
     }
 
@@ -91,21 +100,24 @@ const StartPage: React.FC = () => {
           type="email"
           placeholder="Enter your email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 mb-4 w-full rounded"
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setError(""); // Очистка ошибки при изменении текста
+          }}
+          className={`border p-2 mb-2 w-full rounded ${
+            error ? "border-red-500" : "border-gray-300"
+          }`}
           required
         />
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+
         <button
           type="button"
           onClick={handleCheckEmail}
-          className={`bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 w-full mt-2 transition-all duration-300 ${
-            isLoading ? "cursor-wait opacity-70" : ""
-          }`}
-          disabled={isLoading}
+          className={`bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 w-full transition-all duration-300`}
         >
           {isLoading ? "Checking..." : "Next"}
         </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
       </form>
     </div>
   );

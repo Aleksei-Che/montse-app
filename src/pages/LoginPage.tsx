@@ -9,30 +9,27 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // Новый state для загрузки
 
-  // Получаем email из переданных данных
   const email = location.state?.email || "";
 
-  // Получение имени пользователя из Firestore
   useEffect(() => {
     const fetchUserName = async () => {
-      if (email) {
-        try {
-          const usersRef = collection(db, "users");
-          const q = query(usersRef, where("email", "==", email));
-          const querySnapshot = await getDocs(q);
+      if (!email) return;
+      try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
 
-          if (!querySnapshot.empty) {
-            const userData = querySnapshot.docs[0].data();
-            setUserName(userData.name || "Guest");
-          } else {
-            console.warn("User not found in Firestore.");
-            setUserName("Guest");
-          }
-        } catch (error) {
-          console.error("Error fetching user name from Firestore:", error);
+        if (!querySnapshot.empty) {
+          setUserName(querySnapshot.docs[0].data().name || "Guest");
+        } else {
+          console.warn("User not found in Firestore.");
           setUserName("Guest");
         }
+      } catch (error) {
+        console.error("Error fetching user name from Firestore:", error);
+        setUserName("Guest");
       }
     };
 
@@ -40,21 +37,16 @@ const LoginPage: React.FC = () => {
   }, [email]);
 
   const handleLogin = async () => {
+    if (!email || !password) return;
+
+    setLoading(true); // Включаем загрузку
     try {
-      // Логика авторизации
       await signInWithEmailAndPassword(auth, email, password);
-
-      // Получаем имя пользователя после успешного входа
-      const currentUser = auth.currentUser;
-      if (currentUser?.displayName) {
-        setUserName(currentUser.displayName);
-      }
-
-      alert("Login successful!");
       navigate("/home");
     } catch (error) {
       console.error("Error during login:", error);
-      alert("Invalid password or login failed.");
+    } finally {
+      setLoading(false); // Выключаем загрузку
     }
   };
 
@@ -74,9 +66,14 @@ const LoginPage: React.FC = () => {
         <button
           type="button"
           onClick={handleLogin}
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full"
+          disabled={loading} // Делаем кнопку неактивной при загрузке
+          className={`p-2 rounded w-full ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          }`}
         >
-          Login
+          {loading ? "Loading..." : "Login"}
         </button>
       </div>
     </div>

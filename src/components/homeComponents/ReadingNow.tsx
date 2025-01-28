@@ -188,11 +188,11 @@ const ReadingNow: React.FC = () => {
         className="flex gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
       >
         {books.map((book) => (
-          <div key={book.id} className="flex-shrink-0 w-72 relative">
+          <div key={book.id} className="flex-shrink-0 w-72 relative mt-1">
             {isEditMode && (
               <button
                 onClick={() => handleOpenConfirmModal(book.id)}
-                className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 z-10"
+                className="absolute -top-1 -right-1 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 z-10"
               >
                 &minus;
               </button>
