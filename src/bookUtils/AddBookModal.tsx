@@ -53,7 +53,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ book, onClose }) => {
       console.log("Result of dispatch:", result);
 
       console.log(`Book added with status: ${status}`);
-      onClose(); // Закрываем модалку после добавления
+      onClose(); 
     } catch (error) {
       console.error("Failed to add book to Firestore:", error);
     }

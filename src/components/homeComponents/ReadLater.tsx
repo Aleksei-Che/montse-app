@@ -76,7 +76,7 @@ const ReadLater: React.FC = () => {
   console.log("Read later books:", books); // Лог списка книг
 
   return (
-    <section>
+    <section className="relative">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Read Later</h2>
         <button
@@ -99,7 +99,7 @@ const ReadLater: React.FC = () => {
               {isEditMode && (
                 <button
                   onClick={() => handleOpenConfirmModal(book.id)}
-                  className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600"
+                  className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 z-10"
                 >
                   &minus;
                 </button>

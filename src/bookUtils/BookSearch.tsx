@@ -37,7 +37,7 @@ const BookSearch: React.FC<BookSearchProps> = ({ onBookSelect, onClose }) => {
       } finally {
         setIsLoading(false);
       }
-    }, 500); // Задержка в 500 миллисекунд
+    }, 500); 
 
     return () => clearTimeout(delayDebounceFn); // Очищаем таймер при каждом новом вводе
   }, [queryText]);
@@ -63,23 +63,23 @@ const BookSearch: React.FC<BookSearchProps> = ({ onBookSelect, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-4">
-      <div className="bg-white p-6 rounded-lg shadow-xl relative w-full max-w-md md:max-w-lg lg:max-w-xl">
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-lg font-bold"
-        >
-          ✕
-        </button>
-        <h2 className="text-2xl font-bold mb-4 text-center">Search for a Book</h2>
-
-        <input
-          type="text"
-          placeholder="Enter title or author"
-          value={queryText}
-          onChange={(e) => setQueryText(e.target.value)}
-          className="w-full border border-gray-300 p-3 rounded mb-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 px-4">
+        <div className="bg-white dark:bg-gray-800 dark:text-gray-200 p-6 rounded-lg shadow-xl relative w-full max-w-md md:max-w-lg lg:max-w-xl">
+          <button
+            onClick={onClose}
+            className="absolute top-2 right-2 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 text-lg font-bold"
+          >
+            ✕
+          </button>
+          <h2 className="text-2xl font-bold mb-4 text-center">Search for a Book</h2>
+    
+          <input
+            type="text"
+            placeholder="Enter title or author"
+            value={queryText}
+            onChange={(e) => setQueryText(e.target.value)}
+            className="w-full border border-gray-300 dark:border-gray-700 p-3 rounded mb-4 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+          />
 
         {isLoading && (
           <p className="text-gray-500 text-center mt-2">Searching...</p>

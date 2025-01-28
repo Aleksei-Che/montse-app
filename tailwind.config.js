@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -22,6 +23,10 @@ export default {
       animation: {
         'fade-in': 'fade-in 2s ease-in-out',
         'fade-out': 'fade-out 1s ease-in-out',
+      },
+      colors: {
+        cardLight: '#ffffff', // Цвет для светлой темы
+        cardDark: '#1f2937', // Цвет для тёмной темы (чуть светлее фона приложения)
       },
     },
   },

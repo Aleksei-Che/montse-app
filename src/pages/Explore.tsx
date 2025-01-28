@@ -22,17 +22,15 @@ const Explore: React.FC = () => {
 
   const [selectedPeriod, setSelectedPeriod] = useState<"week" | "month" | "year">("week");
 
-  // Загружаем книги из Firestore
   useEffect(() => {
     if (user) {
-      console.log("Fetching books for user:", user.uid); // Лог пользователя
+      console.log("Fetching books for user:", user.uid); 
       dispatch(fetchBooksFromFirestore(user.uid));
     }
   }, [user, dispatch]);
 
-  // Фильтруем книги в зависимости от выбранного периода
   const filteredBooks = useMemo(() => {
-    console.log("Applying filter for period:", selectedPeriod); // Лог выбранного периода
+    console.log("Applying filter for period:", selectedPeriod);
     const now = new Date();
     let start: Date, end: Date;
 
@@ -51,7 +49,7 @@ const Explore: React.FC = () => {
       book.finishedAt && isWithinInterval(new Date(book.finishedAt), { start, end })
     );
 
-    console.log(`Filtered books for ${selectedPeriod}:`, result); // Лог фильтрации
+    console.log(`Filtered books for ${selectedPeriod}:`, result); 
     return result;
   }, [selectedPeriod, books]);
 
@@ -59,13 +57,12 @@ const Explore: React.FC = () => {
     <div className="p-4 sm:p-6 lg:p-8 max-w-screen-lg mx-auto">
       <h1 className="text-2xl font-bold mb-6 text-center">Explore Your Statistics</h1>
 
-      {/* Кнопки для выбора периода */}
       <div className="flex justify-center mb-6">
         {["week", "month", "year"].map((period) => (
           <button
             key={period}
             onClick={() => {
-              console.log("Switching period to:", period); // Лог переключения периода
+              console.log("Switching period to:", period); 
               setSelectedPeriod(period as "week" | "month" | "year");
             }}
             className={`px-4 py-2 mx-2 rounded ${
@@ -77,13 +74,12 @@ const Explore: React.FC = () => {
         ))}
       </div>
 
-      {/* Список книг за выбранный период */}
-      <div className="bg-white p-6 rounded shadow mb-6">
+      <div className="p-6 rounded shadow mb-6">
         <p className="text-lg">Books read this {selectedPeriod}:</p>
         <ul className="list-disc list-inside mt-4">
           {filteredBooks.length > 0 ? (
             filteredBooks.map((book) => (
-              <li key={book.id} className="text-gray-700">
+              <li key={book.id} className="text-gray-700 dark:text-gray-300">
                 {book.title} (Read on: {new Date(book.finishedAt!).toLocaleDateString()})
               </li>
             ))
@@ -93,7 +89,6 @@ const Explore: React.FC = () => {
         </ul>
       </div>
 
-      {/* Виджет целей */}
       <Goals />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
@@ -12,24 +12,26 @@ export const useAuth = (): AuthState => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("useAuth initialized");
+    console.log("useAuth: Initializing authentication listener");
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log("onAuthStateChanged triggered. Current User:", currentUser);
+      console.log("useAuth: Auth state changed. Current User:", currentUser);
 
-      // Условие предотвращает лишние обновления
-      setUser((prevUser) => (prevUser?.uid === currentUser?.uid ? prevUser : currentUser));
-      console.log("useAuth - Updated user state:", currentUser);
+      // Предотвращаем лишние обновления, если пользователь не изменился
+      setUser((prevUser) =>
+        prevUser?.uid === currentUser?.uid ? prevUser : currentUser
+      );
       setLoading(false);
     });
 
     return () => {
-      console.log("useAuth cleanup: unsubscribing auth listener");
+      console.log("useAuth: Cleaning up authentication listener");
       unsubscribe();
     };
   }, []);
 
-  console.log("useAuth - user:", user, "loading:", loading);
+  // Меморизация возвращаемого объекта, чтобы исключить лишние рендеры
+  const authState = useMemo(() => ({ user, loading }), [user, loading]);
 
-  return { user, loading };
+  return authState;
 };

@@ -74,7 +74,7 @@ const Finished: React.FC = () => {
               {isEditMode && (
                 <button
                   onClick={() => handleOpenConfirmModal(book.id)}
-                  className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600"
+                  className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 z-10"
                 >
                   &minus;
                 </button>
@@ -86,10 +86,10 @@ const Finished: React.FC = () => {
                 <p className="text-sm text-gray-500">
                   Total Time:{" "}
                   {book.totalTime
-                    ? `${Math.floor(book.totalTime / (1000 * 60 * 60))}h ${
-                        Math.floor((book.totalTime % (1000 * 60 * 60)) / (1000 * 60))
-                      }m`
-                    : "0h 0m"}
+                    ? `${Math.floor(book.totalTime / (1000 * 60 * 60 * 24))}d ${
+                        Math.floor((book.totalTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+                      }h`
+                    : "0d 0h"}
                 </p>
               </BookCard>
             </div>
