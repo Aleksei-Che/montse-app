@@ -47,7 +47,6 @@ const ReadingNow: React.FC = () => {
           });
         }, 60000); 
 
-        // Немедленное обновление
         const elapsedTime = Date.now() - startTime;
         const newDays = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
         const newHours = Math.floor((elapsedTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -138,7 +137,6 @@ const ReadingNow: React.FC = () => {
     [dispatch, user, isUpdating]
   );
 
-  // Обработчик удаления книги**
   const handleConfirmDelete = async () => {
     if (isDeleting) return;
     setIsDeleting(true);
