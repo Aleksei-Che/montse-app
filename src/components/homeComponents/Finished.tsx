@@ -31,7 +31,7 @@ const Finished: React.FC = () => {
 
   const handleConfirmDelete = async () => {
     if (selectedBookId && user) {
-      console.log("Attempting to delete book:", selectedBookId); // Лог перед удалением
+      console.log("Attempting to delete book:", selectedBookId);
       try {
         await dispatch(
           removeBookFromFirestore({
@@ -39,15 +39,15 @@ const Finished: React.FC = () => {
             bookId: selectedBookId,
           })
         );
-        console.log(`Book ${selectedBookId} successfully deleted.`); // Лог успешного удаления
+        console.log(`Book ${selectedBookId} successfully deleted.`);
       } catch (error) {
-        console.error("Failed to delete the book:", error); // Лог ошибки удаления
+        console.error("Failed to delete the book:", error);
       }
     }
     handleCloseConfirmModal();
   };
 
-  console.log("Finished books:", finishedBooks); // Лог списка книг
+  console.log("Finished books:", finishedBooks);
 
   return (
     <section className="relative">
@@ -55,7 +55,7 @@ const Finished: React.FC = () => {
         <h2 className="text-xl font-semibold">Finished</h2>
         <button
           onClick={() => {
-            console.log("Toggling edit mode:", !isEditMode); // Лог переключения режима редактирования
+            console.log("Toggling edit mode:", !isEditMode); 
             setIsEditMode((prev) => !prev);
           }}
           className="text-blue-500 hover:underline"
@@ -105,8 +105,8 @@ const Finished: React.FC = () => {
           onCancel={handleCloseConfirmModal}
         />
       )}
-      <ScrollButtons containerId="finished-container" />
-    </section>
+{  finishedBooks.length > 1 &&    <ScrollButtons containerId="finished-container" />
+}    </section>
   );
 };
 

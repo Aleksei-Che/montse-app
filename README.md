@@ -1,50 +1,41 @@
-# React + TypeScript + Vite
+# Montse to improve reading habbit and personal grow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
 
-Currently, two official plugins are available:
+This application is your personal reading tracker. It helps you monitor your reading habits, stay motivated, and see your progress over time. Reading not only enhances your personal development but also strengthens memory, and fosters deeper neural connections.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![welcome to Montse!](src/assets/readmeImg.png)
 
-## Expanding the ESLint configuration
+Simply add a book you’re reading and take control of your progress. Track the days and hours you spend reading, stay engaged, and achieve your reading goals with ease!
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Functions
+	•	📚 **Track Your Reading** – Monitor the books you’re reading, track your progress, and see how much time you spend on each book.
+	•	🔍 **Search for Books** – Find books through the integrated Google Books API and add them to your reading list.
+	•	✍️ **Add Books Manually** – If a book is not found in the database, you can enter its details manually.
+	•	🎯 **Set and Track Goals** – Define your reading goals and track your progress with an interactive progress bar.
+	•	📊 **Explore Your Statistics** – View insights into your reading habits by filtering books by week, month, or year.
+	•	🏆 **Reading Status Management** – Organize books into categories: Reading Now, Read Later, and Finished.
+	•	🌚 **Dark Mode Support** – Seamlessly switch between light and dark mode for a comfortable reading experience.
+	•	🔄 **Sync Across Devices** – All data is securely stored in Firebase Firestore, ensuring seamless synchronization across devices.
+	•	🗑️ **Manage Your Library** – Edit or remove books from your collection effortlessly.
 
-- Configure the top-level `parserOptions` property like this:
+  ## Technologies
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+  Technologies Used
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Frontend:
+	•	React – Core library for building the UI
+	•	Vite – Fast development server and build tool
+	•	TypeScript – Static typing for better code quality
+	•	Tailwind CSS – Utility-first CSS framework
+	•	React Router DOM – Navigation and routing
+	•	React Icons – Icon library for UI enhancement
+	•	Tailwind Scrollbar – Custom styling for scrollbars
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+State Management:
+	•	Redux Toolkit – Efficient state management
+	•	React Redux – Integration of Redux with React
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Backend & Database:
+	•	Firebase – Backend-as-a-service for authentication, Firestore database, and storage
+	•	Date-fns – Library for date manipulation

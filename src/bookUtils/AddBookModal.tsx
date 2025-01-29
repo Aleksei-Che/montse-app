@@ -60,7 +60,7 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ book, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
       <div className="bg-white p-6 rounded shadow-lg relative w-full max-w-sm md:max-w-lg mx-4">
         <button
           onClick={onClose}

@@ -16,7 +16,7 @@ const StartPage: React.FC = () => {
   // Таймеры для анимаций
   useEffect(() => {
     const introTimer = setTimeout(() => setAnimationStage("fade-out"), 3000);
-    const welcomeTimer = setTimeout(() => setAnimationStage("welcome"), 4000);
+    const welcomeTimer = setTimeout(() => setAnimationStage("welcome"), 3900);
     const logoTimer = setTimeout(() => setShowLogo(true), 4000);
 
     return () => {

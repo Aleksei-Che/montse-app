@@ -55,40 +55,51 @@ const Explore: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-screen-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-6 text-center">Explore Your Statistics</h1>
-
-      <div className="flex justify-center mb-6">
+      <h1 className="text-3xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+        📊 Explore Your Statistics
+      </h1>
+  
+      {/* Кнопки выбора периода */}
+      <div className="flex justify-center space-x-2 mb-6">
         {["week", "month", "year"].map((period) => (
           <button
             key={period}
-            onClick={() => {
-              console.log("Switching period to:", period); 
-              setSelectedPeriod(period as "week" | "month" | "year");
-            }}
-            className={`px-4 py-2 mx-2 rounded ${
-              selectedPeriod === period ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
-            } hover:bg-blue-400`}
+            onClick={() => setSelectedPeriod(period as "week" | "month" | "year")}
+            className={`px-4 py-2 rounded-lg transition-all duration-300 font-semibold shadow-md ${
+              selectedPeriod === period
+                ? "bg-blue-500 text-white border-2 border-blue-600"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
           >
             {period.charAt(0).toUpperCase() + period.slice(1)}
           </button>
         ))}
       </div>
-
-      <div className="p-6 rounded shadow mb-6">
-        <p className="text-lg">Books read this {selectedPeriod}:</p>
-        <ul className="list-disc list-inside mt-4">
+  
+      {/* Список книг */}
+      <div className="p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 mb-6">
+        <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+          📚 Books read this {selectedPeriod}:
+        </p>
+        <ul className="list-disc list-inside mt-4 space-y-2">
           {filteredBooks.length > 0 ? (
             filteredBooks.map((book) => (
               <li key={book.id} className="text-gray-700 dark:text-gray-300">
-                {book.title} (Read on: {new Date(book.finishedAt!).toLocaleDateString()})
+                {book.title}{" "}
+                <span className="text-gray-500">
+                  (Read on: {book.finishedAt ? new Date(book.finishedAt).toLocaleDateString() : "Unknown date"})
+                </span>
               </li>
             ))
           ) : (
-            <p>No books found for this {selectedPeriod}.</p>
+            <p className="text-center text-gray-500 italic">
+              📖 No books found for this {selectedPeriod}.
+            </p>
           )}
         </ul>
       </div>
-
+  
+      {/* Reading Goals */}
       <Goals />
     </div>
   );
