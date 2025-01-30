@@ -37,7 +37,7 @@ const BookCard: React.FC<BookCardProps> = ({
     if (titleRef.current) {
       const rect = titleRef.current.getBoundingClientRect();
       setTooltipPosition({
-        top: rect.top - 25, // Смещаем вверх
+        top: rect.top - 25, 
         left: rect.left,
       });
       setShowTooltip(true);
