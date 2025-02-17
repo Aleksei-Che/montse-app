@@ -15,9 +15,6 @@ export const useAuth = (): AuthState => {
     console.log("useAuth: Initializing authentication listener");
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log("useAuth: Auth state changed. Current User:", currentUser);
-
-      // Предотвращаем лишние обновления, если пользователь не изменился
       setUser((prevUser) =>
         prevUser?.uid === currentUser?.uid ? prevUser : currentUser
       );
