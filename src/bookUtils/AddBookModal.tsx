@@ -31,7 +31,6 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ book, onClose }) => {
     try {
       console.log("Adding book to Firestore:", book);
 
-      // Убираем `startTime`, если статус не "reading"
       const bookData = {
         ...book,
         status,
@@ -43,16 +42,13 @@ const AddBookModal: React.FC<AddBookModalProps> = ({ book, onClose }) => {
         book: bookData,
       });
 
-      const result = await dispatch(
+     await dispatch(
         addBookToFirestore({
           userId: user.uid,
           book: bookData,
         })
       );
-
-      console.log("Result of dispatch:", result);
-
-      console.log(`Book added with status: ${status}`);
+      
       onClose(); 
     } catch (error) {
       console.error("Failed to add book to Firestore:", error);

@@ -5,7 +5,6 @@ import { addBookToFirestore } from "./booksSlice";
 import ManualBookModal from "./ManualBookModal";
 import { Book } from "./booksSlice";
 
-// Функция запроса книг вынесена за пределы компонента
 const fetchBooks = async (query: string): Promise<Book[]> => {
   const apiKey = import.meta.env.VITE_APP_GOOGLE_BOOKS_API_KEY;
   if (!apiKey) throw new Error("Google Books API key is missing.");
@@ -57,7 +56,6 @@ const BookSearch: React.FC<{ onBookSelect: (book: Book) => void; onClose: () => 
     return () => clearTimeout(delayDebounceFn);
   }, [queryText]);
 
-  // Используем useCallback, чтобы избежать лишних ререндеров
   const handleSave = useCallback(
     async (title: string, author: string, status: "reading" | "later") => {
       if (!title.trim() || !author.trim()) {
@@ -140,7 +138,7 @@ const BookSearch: React.FC<{ onBookSelect: (book: Book) => void; onClose: () => 
         </ul>
       </div>
   
-      {/* Модалка ручного добавления */}
+  
       {isManualEntryOpen && (
         <ManualBookModal
           onClose={() => setIsManualEntryOpen(false)}

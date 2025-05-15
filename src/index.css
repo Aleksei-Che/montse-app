@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tailwind базовые стили для светлой и тёмной темы */
+
 html {
   @apply bg-white text-gray-900;
 }
@@ -11,7 +11,7 @@ html.dark {
   @apply bg-gray-900 text-gray-100;
 }
 
-/* Добавляем стили для body, чтобы точно покрывать весь фон */
+
 body {
   @apply bg-inherit; /* Использует фон из html */
 }

@@ -12,7 +12,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   console.log("PrivateRoute - user:", user, "loading:", loading);
 
   if (loading) {
-    return <div>Loading...</div>; // Показываем загрузку
+    return <div>Loading...</div>; 
   }
 
   if (!user) {

@@ -25,8 +25,7 @@ const Goals: React.FC = () => {
           <p className="text-lg text-center mb-4">
             Goal: {goal > 0 ? `${goal} books` : "No goal set"} | Progress: {progress.toFixed(1)}%
           </p>
-
-          {/* Прогресс-бар */}
+    
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
             <div
               className="bg-blue-500 dark:bg-blue-400 h-full transition-all"

@@ -9,7 +9,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false); // Новый state для загрузки
+  const [loading, setLoading] = useState(false); 
 
   const email = location.state?.email || "";
 
@@ -39,14 +39,14 @@ const LoginPage: React.FC = () => {
   const handleLogin = async () => {
     if (!email || !password) return;
 
-    setLoading(true); // Включаем загрузку
+    setLoading(true); 
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/home");
     } catch (error) {
       console.error("Error during login:", error);
     } finally {
-      setLoading(false); // Выключаем загрузку
+      setLoading(false); 
     }
   };
 
@@ -66,7 +66,7 @@ const LoginPage: React.FC = () => {
         <button
           type="button"
           onClick={handleLogin}
-          disabled={loading} // Делаем кнопку неактивной при загрузке
+          disabled={loading} 
           className={`p-2 rounded w-full ${
             loading
               ? "bg-gray-400 cursor-not-allowed"

@@ -15,7 +15,7 @@ import "./App.css";
 
 function App() {
   const dispatch = useAppDispatch();
-  const { user, loading } = useAuth(); // Добавляем loading из useAuth
+  const { user, loading } = useAuth(); 
   const location = useLocation();
 
   const hideNavbarPath = ["/", "/loginpage", "/registerpage"];
@@ -24,7 +24,7 @@ function App() {
   useEffect(() => {
     if (user) {
       console.log("App - Fetching books for user:", user.uid);
-      dispatch(fetchBooksFromFirestore(user.uid)); // Загружаем книги пользователя
+      dispatch(fetchBooksFromFirestore(user.uid)); 
     } else {
       console.log("App - No user logged in.");
     }
@@ -33,7 +33,7 @@ function App() {
 
   if (loading) {
     console.log("App - Loading...");
-    return <div>Loading...</div>; // Отображаем спиннер или текст, пока загружается авторизация
+    return <div>Loading...</div>; 
   }
 
   return (

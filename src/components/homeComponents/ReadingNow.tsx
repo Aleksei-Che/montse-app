@@ -85,7 +85,7 @@ const ReadingNow: React.FC = () => {
         }
       }
 
-      // Обновляем только если данные реально изменились
+  
       if (JSON.stringify(updatedReadersMap) !== JSON.stringify(totalReaders)) {
         setTotalReaders(updatedReadersMap);
       }
@@ -96,7 +96,6 @@ const ReadingNow: React.FC = () => {
     }
   }, [books.length, dispatch]); 
 
-  // Обработчик завершения чтения
   const handleStopReading = useCallback(
     async (bookId: string, startTime: number) => {
       if (isUpdating) return;

@@ -46,7 +46,7 @@ const BookCard: React.FC<BookCardProps> = ({
 
   return (
     <div className="relative shadow-lg rounded-lg overflow-hidden flex w-68 h-40 bg-cardLight dark:bg-cardDark">
-      {/* Tooltip ВНЕ карточки */}
+      {/* Tooltip */}
       {isTruncated && showTooltip && (
         <div
           className="fixed bg-black text-white text-xs px-2 py-1 rounded shadow-md whitespace-nowrap z-50"
@@ -56,7 +56,7 @@ const BookCard: React.FC<BookCardProps> = ({
         </div>
       )}
 
-      {/* Обложка */}
+      {/* Cover */}
       <div className="w-1/3 p-2 flex items-center justify-center">
         <img
           src={coverImage || "/placeholder.jpg"}
@@ -65,7 +65,7 @@ const BookCard: React.FC<BookCardProps> = ({
         />
       </div>
 
-      {/* Информация */}
+      {/* Info */}
       <div className="w-2/3 p-4 flex flex-col min-h-0">
         <div className="flex-grow">
           <h3
@@ -87,10 +87,10 @@ const BookCard: React.FC<BookCardProps> = ({
           )}
         </div>
 
-        {/* Динамический контент */}
+        {/* Dinamic content */}
         {children}
 
-        {/* Кнопка фиксирована внизу */}
+        {/* button */}
         {onActionClick && actionLabel && (
           <button
             onClick={onActionClick}

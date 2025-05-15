@@ -7,10 +7,10 @@ import { setDoc, doc } from "firebase/firestore";
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const initialEmail = location.state?.email || ""; // Email, переданный со StartPage
+  const initialEmail = location.state?.email || ""; 
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
-  const [name, setName] = useState(""); // Поле для имени пользователя
+  const [name, setName] = useState(""); 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,24 +20,19 @@ const RegisterPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Проверка: существует ли пользователь с таким email
       const methods = await fetchSignInMethodsForEmail(auth, email.trim().toLowerCase());
       if (methods.length > 0) {
         setError("Email already in use. Redirecting to LoginPage...");
         navigate("/loginpage", { state: { email } });
         return;
       }
-
-      // Создаём пользователя в Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
       const user = userCredential.user;
 
-      // Обновляем имя пользователя
       if (name.trim()) {
         await updateProfile(user, { displayName: name });
       }
 
-      // Сохраняем данные пользователя в Firestore
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         email: user.email,
@@ -46,7 +41,7 @@ const RegisterPage: React.FC = () => {
       });
 
       console.log("User successfully registered and added to Firestore!");
-      navigate("/home"); // Перенаправляем на главную страницу
+      navigate("/home"); 
     } catch (error: any) {
       console.error("Registration failed:", error);
       setError(error.message || "Registration failed. Please try again.");

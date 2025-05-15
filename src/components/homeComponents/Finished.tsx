@@ -18,13 +18,13 @@ const Finished: React.FC = () => {
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
   const handleOpenConfirmModal = (bookId: string) => {
-    console.log("Opening confirm modal for book:", bookId); // Лог открытия модалки
+    console.log("Opening confirm modal for book:", bookId);
     setSelectedBookId(bookId);
     setIsConfirmModalOpen(true);
   };
 
   const handleCloseConfirmModal = () => {
-    console.log("Closing confirm modal"); // Лог закрытия модалки
+    console.log("Closing confirm modal"); 
     setSelectedBookId(null);
     setIsConfirmModalOpen(false);
   };
@@ -105,7 +105,7 @@ const Finished: React.FC = () => {
           onCancel={handleCloseConfirmModal}
         />
       )}
-{  finishedBooks.length > 1 &&    <ScrollButtons containerId="finished-container" />
+{  finishedBooks.length > 1 &&  <ScrollButtons containerId="finished-container" />
 }    </section>
   );
 };

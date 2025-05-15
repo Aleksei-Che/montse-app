@@ -13,7 +13,6 @@ const StartPage: React.FC = () => {
   const [animationStage, setAnimationStage] = useState<"intro" | "fade-out" | "welcome">("intro");
   const [showLogo, setShowLogo] = useState(false);
 
-  // Таймеры для анимаций
   useEffect(() => {
     const introTimer = setTimeout(() => setAnimationStage("fade-out"), 3000);
     const welcomeTimer = setTimeout(() => setAnimationStage("welcome"), 3900);
@@ -26,15 +25,16 @@ const StartPage: React.FC = () => {
     };
   }, []);
 
-  // Проверка email в Firestore
   const getUserData = async (email: string) => {
+    console.log("Checking Firestore for email:", email);
     const usersRef = collection(db, "users");
     const q = query(usersRef, where("email", "==", email));
+    console.log("Firestore query:", q); 
     const querySnapshot = await getDocs(q);
+    console.log("Query result:", querySnapshot.empty ? "No user found" : "User found");
     return !querySnapshot.empty;
   };
 
-  // Валидация email (регулярное выражение)
   const isValidEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
@@ -71,14 +71,12 @@ const StartPage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-700 text-white">
-      {/* Логотип */}
       {showLogo && (
         <div className="absolute top-6 left-6 animate-fade-in">
           <Logo />
         </div>
       )}
 
-      {/* Анимация приветствия */}
       <div className="mb-8 text-center">
         {animationStage === "intro" && (
           <h1 className="text-4xl font-bold animate-fade-in">Hi! I'm Montse.</h1>
@@ -94,7 +92,6 @@ const StartPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Форма ввода */}
       <form className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm text-black">
         <input
           type="email"
@@ -102,7 +99,7 @@ const StartPage: React.FC = () => {
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            setError(""); // Очистка ошибки при изменении текста
+            setError("");
           }}
           className={`border p-2 mb-2 w-full rounded ${
             error ? "border-red-500" : "border-gray-300"

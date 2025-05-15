@@ -59,7 +59,6 @@ const Explore: React.FC = () => {
         📊 Explore Your Statistics
       </h1>
   
-      {/* Кнопки выбора периода */}
       <div className="flex justify-center space-x-2 mb-6">
         {["week", "month", "year"].map((period) => (
           <button
@@ -76,7 +75,6 @@ const Explore: React.FC = () => {
         ))}
       </div>
   
-      {/* Список книг */}
       <div className="p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 mb-6">
         <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
           📚 Books read this {selectedPeriod}:
@@ -99,7 +97,6 @@ const Explore: React.FC = () => {
         </ul>
       </div>
   
-      {/* Reading Goals */}
       <Goals />
     </div>
   );

@@ -18,7 +18,7 @@ const Profile: React.FC = () => {
       setTimeout(() => {
         console.log("User successfully signed out. Navigating to '/'...");
         navigate("/");
-      }, 500); // Добавляем небольшую задержку
+      }, 500); 
     } catch (error) {
       console.error("Error logging out:", error);
     }

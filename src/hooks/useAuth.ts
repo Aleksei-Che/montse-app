@@ -27,7 +27,6 @@ export const useAuth = (): AuthState => {
     };
   }, []);
 
-  // Меморизация возвращаемого объекта, чтобы исключить лишние рендеры
   const authState = useMemo(() => ({ user, loading }), [user, loading]);
 
   return authState;
